@@ -1,14 +1,16 @@
 package com.example.bookingservice.service;
 
 import com.example.bookingservice.model.Booking;
+import com.example.bookingservice.model.BusInventoryPatchRequest;
 import com.example.bookingservice.repository.BookingRepository;
 import com.example.bookingservice.repository.PassengerRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Slf4j
 public class BookingService {
     private final BookingRepository bookingRepository;
     private final PassengerRepository passengerRepository;
@@ -42,6 +44,14 @@ public class BookingService {
             passenger.setBookingId(bookingSaved.getBookingNumber());
             return passenger;
         }).toList());
+
+        //payment
+
+        //update inventory
+        String status = inventoryServiceClient.patchInventory(BusInventoryPatchRequest.builder()
+                .busNumber(booking.getBusNumber()).bookedSeats(booking.getNumberOfSeats()).build());
+        log.info("Update inventory status: {}", status);
+
         return bookingSaved;
     }
 

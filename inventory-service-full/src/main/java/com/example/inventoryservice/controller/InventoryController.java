@@ -1,6 +1,7 @@
 package com.example.inventoryservice.controller;
 
 import com.example.inventoryservice.model.BusInventory;
+import com.example.inventoryservice.model.BusInventoryPatchRequest;
 import com.example.inventoryservice.repository.BusInventoryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,24 @@ public class InventoryController {
                     resp.put("lastUpdated", Instant.now());
                     return ResponseEntity.ok(resp);
                 });
+    }
+
+    @PatchMapping
+    ResponseEntity<String> updateInventory(@RequestBody BusInventoryPatchRequest busInventoryPatchRequest){
+        var busInventoryOptional = repository.findById(busInventoryPatchRequest.getBusNumber());
+        if (busInventoryOptional.isEmpty()){
+            return ResponseEntity.badRequest().body("NOT_FOUND");
+        }
+        if (busInventoryOptional.get().getAvailableSeats() < busInventoryPatchRequest.getBookedSeats()){
+            return ResponseEntity.badRequest().body("INVALID_SEATS");
+        }
+
+        var invextory = busInventoryOptional.get();
+        invextory.setAvailableSeats(busInventoryOptional.get().getAvailableSeats() - busInventoryPatchRequest.getBookedSeats());
+        invextory.setLastUpdated(Instant.now());
+        repository.save(invextory);
+
+        return ResponseEntity.ok("SUCCESS");
     }
 
     @PostMapping
