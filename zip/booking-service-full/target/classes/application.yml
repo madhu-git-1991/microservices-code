@@ -7,7 +7,7 @@ spring:
     password: rootroot
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
 server:
@@ -21,3 +21,8 @@ eureka:
     prefer-ip-address: true
 
 spring.activemq.broker-url: tcp://localhost:61616
+
+
+inventory-service:
+  url: http://localhost:8103
+

@@ -1,2 +1,6 @@
 **.class
 **.idea/**
+**.jar
+**.jar.**
+target/**
+zip/booking-service-full/target/classes/application.yml

@@ -1,1 +1,6 @@
 /.idea/**
+inventory-service-full/target/**/**
+zip/booking-service-full/target/**
+zip/booking-service-full/target/classes/application.yml
+.idea
+inventory-service-full/**

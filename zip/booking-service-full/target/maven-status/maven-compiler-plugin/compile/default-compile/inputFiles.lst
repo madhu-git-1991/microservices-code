@@ -2,7 +2,9 @@
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/controller/BookingController.java
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/controller/MainFileSample.java
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/model/Booking.java
+/Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/model/BusInventoryDTO.java
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/model/Passenger.java
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/repository/BookingRepository.java
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/repository/PassengerRepository.java
 /Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/service/BookingService.java
+/Users/samratnayak/Documents/localrepo/microservices-code/zip/booking-service-full/src/main/java/com/example/bookingservice/service/InventoryServiceClient.java

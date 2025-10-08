@@ -1,10 +1,13 @@
 package com.example.bookingservice.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Builder
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
