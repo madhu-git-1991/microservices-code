@@ -35,7 +35,7 @@ public class BookingService {
     public Booking createBooking(Booking booking) {
         //check inventory
         final var inventory = inventoryServiceClient.fetchInventory(booking.getBusNumber());
-        if(booking.getPassengers().size() > inventory.getAvailableSeats()){
+        if(booking.getNumberOfSeats() > inventory.getAvailableSeats()){
             return Booking.builder().status("Error:Not enough seats").build();
         }
         booking.setStatus("PENDING");
