@@ -3,4 +3,5 @@ inventory-service-full/target/**/**
 zip/booking-service-full/target/**
 zip/booking-service-full/target/classes/application.yml
 .idea
+course-assignments/student-management-service/target/**
 #inventory-service-full/**
