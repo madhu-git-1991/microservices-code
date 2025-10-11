@@ -28,10 +28,10 @@ public class StudentController {
     }
 
     @PutMapping("/{id}")
-    public Student update(@PathVariable Long id, @RequestBody Student s) { return svc.update(id, s); }
+    public Student update(@PathVariable (name = "id") Long id, @RequestBody Student s) { return svc.update(id, s); }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable (name = "id") Long id) {
         svc.delete(id);
         return ResponseEntity.noContent().build();
     }
