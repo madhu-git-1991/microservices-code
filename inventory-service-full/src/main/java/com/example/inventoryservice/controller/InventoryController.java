@@ -31,8 +31,8 @@ public class InventoryController {
         //check if first booking
         var busInventoryOptional  = repository.findById(busNumber);
         System.out.println("busInventoryOptional "+busInventoryOptional);
+        BusRouteDTO busRouteDetails = adminServiceClient.fetchRouteDetails(busNumber);
         if (busInventoryOptional.isEmpty()){
-            BusRouteDTO busRouteDetails = adminServiceClient.fetchRouteDetails(busNumber);
             System.out.println("busRouteDetails "+busRouteDetails);
             if (Objects.isNull(busRouteDetails) || busRouteDetails.getTotalSeats() == 0){
                 Map<String, Object> resp = buildInvalidBusNoResponse();
@@ -42,9 +42,16 @@ public class InventoryController {
                 inventory.setAvailableSeats(busRouteDetails.getTotalSeats());
                 inventory.setLastUpdated(Instant.now());
                 inventory.setBusNumber(busRouteDetails.getBusNumber());
+                inventory.setPricePerSeat(busRouteDetails.getPrice());
                 repository.save(inventory);
                 return buildValidResponse(inventory);
             }
+        }
+
+        if (busInventoryOptional.isPresent() && Objects.isNull(busInventoryOptional.get().getPricePerSeat())){
+            var inventoryToUpdate = busInventoryOptional.get();
+            inventoryToUpdate.setPricePerSeat(busRouteDetails.getPrice());
+            repository.save(inventoryToUpdate);
         }
 
         return busInventoryOptional
@@ -61,6 +68,7 @@ public class InventoryController {
         resp.put("busNumber", inv.getBusNumber());
         resp.put("availableSeats", inv.getAvailableSeats());
         resp.put("lastUpdated", inv.getLastUpdated());
+        resp.put("pricePerSeat", inv.getPricePerSeat());
         return ResponseEntity.ok(resp);
     }
 

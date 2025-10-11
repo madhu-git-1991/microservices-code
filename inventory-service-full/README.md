@@ -53,3 +53,9 @@ response
   "busNumber": "OD000211"
 }
 ```
+
+## alter DDL commands used
+
+```
+alter table bus_inventory add price_per_seat DOUBLE;
+```

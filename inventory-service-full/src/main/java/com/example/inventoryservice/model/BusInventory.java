@@ -17,6 +17,8 @@ public class BusInventory {
 
     private Instant lastUpdated;
 
+    private Double pricePerSeat;
+
     public BusInventory() {}
 
     public String getBusNumber() { return busNumber; }
@@ -24,5 +26,14 @@ public class BusInventory {
     public int getAvailableSeats() { return availableSeats; }
     public void setAvailableSeats(int availableSeats) { this.availableSeats = availableSeats; }
     public Instant getLastUpdated() { return lastUpdated; }
+
+    public Double getPricePerSeat() {
+        return pricePerSeat;
+    }
+
+    public void setPricePerSeat(Double pricePerSeat) {
+        this.pricePerSeat = pricePerSeat;
+    }
+
     public void setLastUpdated(Instant lastUpdated) { this.lastUpdated = lastUpdated; }
 }
