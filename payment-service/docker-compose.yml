@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  activemq:
+    image: rmohr/activemq
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+  payment-service:
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - activemq
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
