@@ -1,6 +1,7 @@
 package com.example.bookingservice.service;
 
 import com.example.bookingservice.model.Booking;
+import com.example.bookingservice.model.BookingPaymentConfirmation;
 import com.example.bookingservice.model.BusInventoryPatchRequest;
 import com.example.bookingservice.repository.BookingRepository;
 import com.example.bookingservice.repository.PassengerRepository;
@@ -41,27 +42,24 @@ public class BookingService {
             return Booking.builder().status("Error:Not enough seats").build();
         }
         booking.setStatus("PENDING");
+        booking.setTotalPrice(inventory.getPricePerSeat()*booking.getNumberOfSeats());
         Booking bookingSaved = bookingRepository.save(booking);
         passengerRepository.saveAll(booking.getPassengers().stream().map(passenger -> {
             passenger.setBookingId(bookingSaved.getBookingNumber());
             return passenger;
         }).toList());
 
-        //payment, fetch price from relevant microservice
-        String paymentStatus = paymentServiceClient.doPayment(String.valueOf(bookingSaved.getBookingNumber()), inventory.getPricePerSeat()*booking.getNumberOfSeats());
-        log.info("payment of {}, for booking {} statyus={}", inventory.getPricePerSeat()*booking.getNumberOfSeats(), bookingSaved.getBookingNumber(), paymentStatus);
-        //update inventory
-        String inventoryUpdateStatus = inventoryServiceClient.patchInventory(BusInventoryPatchRequest.builder()
-                .busNumber(booking.getBusNumber()).bookedSeats(booking.getNumberOfSeats()).build());
-        log.info("Update inventory status: {}", inventoryUpdateStatus);
-        // if payment is complete, mark the booking as success else, keep it as pending for now, check status later in batch and update accordingly
-        if ("COMPLETED".equalsIgnoreCase(paymentStatus)){
-            bookingSaved.setStatus("SUCCESS");
-        }
+        log.info("payment of {}, for booking ID: {} bookingStatus={}", booking.getTotalPrice(), bookingSaved.getBookingNumber(), booking.getStatus());
         return bookingSaved;
     }
 
     public void deleteBooking(Long id) {
         bookingRepository.deleteById(id);
+    }
+
+    public Booking patchBooking(BookingPaymentConfirmation paymentConfirmation) {
+        Booking booking = bookingRepository.findById(Long.valueOf(paymentConfirmation.getBookingNumber())).get();
+        booking.setStatus(paymentConfirmation.getStatus());
+        return bookingRepository.save(booking);
     }
 }

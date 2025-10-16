@@ -1,6 +1,7 @@
 package com.example.bookingservice.controller;
 
 import com.example.bookingservice.model.Booking;
+import com.example.bookingservice.model.BookingPaymentConfirmation;
 import com.example.bookingservice.service.BookingService;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,11 @@ public class BookingController {
     @PostMapping
     public Booking createBooking(@RequestBody Booking booking) {
         return bookingService.createBooking(booking);
+    }
+
+    @PatchMapping
+    public Booking patchBooking(@RequestBody BookingPaymentConfirmation paymentConfirmation){
+        return bookingService.patchBooking(paymentConfirmation);
     }
 
     @DeleteMapping("/{id}")

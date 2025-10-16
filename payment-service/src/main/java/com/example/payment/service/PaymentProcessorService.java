@@ -1,5 +1,10 @@
 package com.example.payment.service;
 
+import com.example.payment.clients.BookingServiceClient;
+import com.example.payment.clients.InventoryServiceClient;
+import com.example.payment.dto.BookingPatchRequest;
+import com.example.payment.dto.BookingResponseDTO;
+import com.example.payment.dto.BusInventoryPatchRequest;
 import com.example.payment.entity.Payment;
 import com.example.payment.repository.PaymentRepository;
 import org.springframework.jms.core.JmsTemplate;
@@ -17,13 +22,20 @@ public class PaymentProcessorService {
 
     private final PaymentRepository repo;
     private final JmsTemplate jmsTemplate;
+    private final InventoryServiceClient inventoryServiceClient;
+    private final BookingServiceClient bookingServiceClient;
 
-    public PaymentProcessorService(PaymentRepository repo, JmsTemplate jmsTemplate) {
+    public PaymentProcessorService(PaymentRepository repo, JmsTemplate jmsTemplate,
+                                   InventoryServiceClient inventoryServiceClient,
+                                   BookingServiceClient bookingServiceClient) {
         this.repo = repo;
         this.jmsTemplate = jmsTemplate;
+        this.inventoryServiceClient = inventoryServiceClient;
+        this.bookingServiceClient = bookingServiceClient;
     }
 
-    public Payment processPayment(String bookingRef, double amount) {
+    public Payment processPayment(String bookingRef,
+                                  double amount) {
         // create payment record (PENDING)
         Payment p = new Payment(bookingRef, amount);
         p.setStatus("PENDING");
@@ -41,6 +53,19 @@ public class PaymentProcessorService {
         // Using JMS queue 'payment.processed' here.
 //        String event = String.format("{\"bookingRef\":\"%s\",\"paymentRef\":\"%s\",\"amount\":%s}", p.getBookingRef(), p.getPaymentRef(), p.getAmount());
 //        jmsTemplate.convertAndSend("payment.processed", event);
+
+        // get booking details
+        BookingResponseDTO booking = bookingServiceClient.getBookingDetails(bookingRef);
+        System.out.println("Booking details before payment:"+booking);
+
+        //update inventory
+        String inventoryUpdateStatus = inventoryServiceClient.patchInventory(
+                new BusInventoryPatchRequest(booking.getBusNumber(), booking.getNumberOfSeats()));
+        System.out.println("Update inventory status post payment: "+inventoryUpdateStatus);
+
+        // update booking as success
+        BookingResponseDTO bookingPatch = bookingServiceClient.patchBooking(bookingRef);
+        System.out.println("final Booking status:"+bookingPatch);
 
         return p;
     }

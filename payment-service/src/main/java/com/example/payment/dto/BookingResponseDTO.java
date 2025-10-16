@@ -1,20 +1,9 @@
-package com.example.bookingservice.model;
-
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+package com.example.payment.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+public class BookingResponseDTO {
     private Long bookingNumber;
     private String busNumber;
     private LocalDate bookingDate;
@@ -23,9 +12,6 @@ public class Booking {
     private int numberOfSeats;
     private String status;
     private Double totalPrice;
-
-    @OneToMany
-    private List<Passenger> passengers;
 
     // Getters and setters
     public Long getBookingNumber() { return bookingNumber; }
@@ -42,8 +28,6 @@ public class Booking {
     public void setNumberOfSeats(int numberOfSeats) { this.numberOfSeats = numberOfSeats; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-    public List<Passenger> getPassengers() { return passengers; }
-    public void setPassengers(List<Passenger> passengers) { this.passengers = passengers; }
 
     public Double getTotalPrice() {
         return totalPrice;
@@ -52,4 +36,19 @@ public class Booking {
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    @Override
+    public String toString() {
+        return "BookingResponseDTO{" +
+                "bookingNumber=" + bookingNumber +
+                ", busNumber='" + busNumber + '\'' +
+                ", bookingDate=" + bookingDate +
+                ", source='" + source + '\'' +
+                ", destination='" + destination + '\'' +
+                ", numberOfSeats=" + numberOfSeats +
+                ", status='" + status + '\'' +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
 }
+
